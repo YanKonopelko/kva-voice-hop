@@ -1,4 +1,5 @@
-import { PHYSICS } from './sim.js?v=da68aa2bb8f2';
+import { PHYSICS } from './sim.js?v=c204956e4ef6';
+import { drawHat } from './cosmetics.js?v=c204956e4ef6';
 
 const TAU = Math.PI * 2;
 function seeded(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
@@ -131,8 +132,23 @@ export class Renderer {
       line(c,[[bx+width/6,y-15],[bx+width/6-1,y-4]],'#e1c0a3',1.4);
     }
   }
-  // A vector cut-out rig: feet, knees, forearms, throat and face move separately.
-  frog(x,y,gait,grounded,vy,time,voice=0,impact=0,dead=false) {
+  coin(x,y,time,index=0) {
+    const c=this.ctx,phase=time*2.25+index*.8,bob=Math.sin(time*2.6+index*.8)*3;
+    c.save();c.translate(x,y+bob);
+    c.scale(.24+.76*Math.abs(Math.cos(phase)),1);
+    // A solid rim and stamped lily leaf; no shadow floating under the pickup.
+    ellipse(c,2,1,12,13,'#b88c3d');
+    ellipse(c,0,0,12,13,'#e4b653');
+    ellipse(c,-.5,-.5,9.4,10.5,'#f6d576');
+    c.beginPath();c.ellipse(0,0,9.8,10.8,0,Math.PI*1.05,Math.PI*1.65);c.strokeStyle='#fff1b2';c.lineWidth=1.7;c.stroke();
+    c.beginPath();c.moveTo(-5,2);c.bezierCurveTo(-8,-4,-1,-8,4,-4);c.bezierCurveTo(9,0,4,7,-1,6);c.lineTo(1,1);c.closePath();c.fillStyle='#c99b40';c.fill();
+    line(c,[[-2,3],[1,-2]],'#e7ba54',1.2);
+    c.restore();
+    const glint=Math.max(0,Math.sin(time*2+index*1.7)-.92)*12.5;
+    if(glint>0){c.save();c.translate(x+8,y+bob-9);c.globalAlpha=glint;c.beginPath();c.moveTo(0,-4);c.quadraticCurveTo(1,-1,4,0);c.quadraticCurveTo(1,1,0,4);c.quadraticCurveTo(-1,1,-4,0);c.quadraticCurveTo(-1,-1,0,-4);c.fillStyle='#fff8d3';c.fill();c.restore();}
+  }
+  // A vector cut-out rig: shoulders stay on the torso, below the face.
+  frog(x,y,gait,grounded,vy,time,voice=0,impact=0,dead=false,hat='none') {
     const c=this.ctx,walking=grounded && Math.abs(gait-this.previousGait)>0.002;
     this.previousGait=gait;
     const motion=grounded?(walking?Math.sin(gait):Math.sin(time*2)*.08):0;
@@ -148,7 +164,7 @@ export class Renderer {
     for(const [hx,hy,kx,ky,fx,fy,col] of limbs){c.beginPath();c.moveTo(hx,hy);c.quadraticCurveTo(kx,ky,fx,fy-2);c.strokeStyle=col;c.lineWidth=8;c.stroke();ellipse(c,fx+4,fy-1,10,3.4,col);}
     c.save();c.translate(0,-bounce+impact*3);c.scale(1+impact*.08,squash);
     // Back arm, pear shaped body and soft belly.
-    line(c,[[-14,-34],[-22,-22+motion*2],[-19,-16]],'#71a448',6);
+    line(c,[[-17,-23],[-26,-17+motion*2],[-26,-10]],'#71a448',6);
     c.beginPath();c.moveTo(-23,-22);c.bezierCurveTo(-26,-40,-18,-54,-3,-53);c.bezierCurveTo(16,-58,30,-44,25,-24);c.bezierCurveTo(28,-9,9,-5,-9,-8);c.bezierCurveTo(-19,-9,-24,-13,-23,-22);c.fillStyle='#8fbc58';c.fill();
     ellipse(c,6,-23,17,13,'#b5cf79');
     // Eyes are separate pivots; blinks are gentle and deterministic.
@@ -160,11 +176,9 @@ export class Renderer {
     ellipse(c,-14,-31,4.5,2.6,'#c3b677');ellipse(c,22,-32,4,2.5,'#c3b677');
     if(voice>.66||!grounded){ellipse(c,8,-32,5+voice*2,4+voice*4,'#4f723d');ellipse(c,9,-29,3,1.6,'#b88d69');}
     else{c.beginPath();c.moveTo(0,-33);c.quadraticCurveTo(9,-25,18,-33);c.strokeStyle='#46663c';c.lineWidth=1.7;c.stroke();}
-    // Orange neckerchief provides one simple accent and a visible follow-through.
-    c.beginPath();c.moveTo(-18,-39);c.quadraticCurveTo(-5,-34,21,-39);c.lineTo(20,-34);c.quadraticCurveTo(2,-29,-17,-34);c.fillStyle='#d7a16c';c.fill();
-    c.save();c.translate(-17,-35);c.rotate(Math.sin(time*5)*.07+(grounded?motion*.06:-.35));c.beginPath();c.moveTo(0,0);c.quadraticCurveTo(-10,2,-19,-5);c.lineTo(-17,5);c.quadraticCurveTo(-7,10,1,3);c.fillStyle='#d7a16c';c.fill();c.restore();
-    const armY=grounded?-20-motion*3:-34;
-    line(c,[[17,-31],[25,-24],[26,armY]],'#7ca94c',5);ellipse(c,26,armY,4,3,'#7ca94c');
+    const armY=grounded?-9-motion*3:-27;
+    line(c,[[18,-22],[27,-16],[30,armY]],'#7ca94c',5);ellipse(c,30,armY,4,3,'#7ca94c');
+    drawHat(c,hat);
     c.restore();c.restore();
     this.joints={hip:[x,y+hipY],leftFoot:[x+backFoot.x,y+backFoot.y],rightFoot:[x+frontFoot.x,y+frontFoot.y]};
   }
@@ -196,15 +210,23 @@ export class Renderer {
     for(const [x,y,w] of sim.level.hazards)if(x>camera-40&&x<camera+W+40)this.hazard(x,y,w,time);
     sim.level.coins.forEach(([x,y],i)=>{
       if(sim.collected.has(i)||x<camera-30||x>camera+W+30)return;
-      const bob=Math.sin(time*2.6+i*.8)*3,rx=7.5+Math.sin(time*2+i)*1.2;
-      ellipse(c,x,y+19,8,2,'#6b986017');ellipse(c,x,y+bob,rx,10,'#d8ae4e');ellipse(c,x-1,y+bob-1,rx-1.8,8,'#f4d576');
-      c.fillStyle='#be9745';c.font='bold 10px sans-serif';c.textAlign='center';c.fillText('✦',x,y+bob+3);
+      this.coin(x,y,time,i);
     });
     if(!p.dead){const ground=sim.level.platforms.find(([x,,w])=>p.x>=x&&p.x<=x+w);if(ground){const h=Math.max(0,ground[1]-p.y);ellipse(c,p.x,ground[1]+2,Math.max(7,23-h*.05),3.5,'#3c633a25');}}
-    this.frog(p.x,p.y,menu?0:sim.gait,p.grounded,p.vy,time,voice,sim.landImpact,p.dead);
+    this.frog(p.x,p.y,menu?0:sim.gait,p.grounded,p.vy,time,voice,sim.landImpact,p.dead,this.hat||'none');
     for(const particle of sim.particles){c.globalAlpha=Math.min(1,particle.life/.2);c.save();c.translate(particle.x,particle.y);c.rotate(particle.life*4);round(c,-particle.size/2,-particle.size/2,particle.size,particle.size*.65,1,particle.color);c.restore();}c.globalAlpha=1;
     c.restore();
     // Foreground reeds frame the start; their motion follows the same breeze.
     if(camera<240){c.save();c.translate(-camera*.8,off);this.foliage(22,549,1.65,0,time);this.foliage(58,558,1.1,2,time);c.restore();}
   }
+}
+
+export function renderAvatar(canvas,hat='none') {
+  const c=canvas.getContext('2d');
+  c.clearRect(0,0,canvas.width,canvas.height);
+  c.save();c.scale(canvas.width/200,canvas.height/170);
+  ellipse(c,100,147,32,5,'#66864c22');
+  c.translate(100,143);c.scale(1.25,1.25);
+  Renderer.prototype.frog.call({ctx:c,previousGait:0},0,0,0,true,0,0,0,0,false,hat);
+  c.restore();
 }

@@ -6,14 +6,14 @@
   <meta name="theme-color" content="#f5f5ec">
   <meta name="description" content="КВА! — маленькое приключение с большим голосом. Говори, чтобы идти. Квакай, чтобы прыгать.">
   <title>КВА! — Прыгай голосом</title>
-  <link rel="icon" href="./assets/favicon.svg?v=da68aa2bb8f2" type="image/svg+xml">
-  <link rel="stylesheet" href="./styles.css?v=da68aa2bb8f2">
-  <meta name="kva-build" content="da68aa2bb8f2">
+  <link rel="icon" href="./assets/favicon.svg?v=c204956e4ef6" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css?v=c204956e4ef6">
+  <meta name="kva-build" content="c204956e4ef6">
 </head>
 <body>
   <div class="app">
     <header class="site-header">
-      <a href="./" class="brand" aria-label="КВА! На главную"><img src="./assets/favicon.svg?v=da68aa2bb8f2" width="44" height="44" alt=""><span>ква<span class="brand-mark">!</span></span><i>маленькая игра.<br>большой голос.</i></a>
+      <a href="./" class="brand" aria-label="КВА! На главную"><img src="./assets/favicon.svg?v=c204956e4ef6" width="44" height="44" alt=""><span>ква<span class="brand-mark">!</span></span><i>маленькая игра.<br>большой голос.</i></a>
       <span class="header-tag"><span class="status-dot"></span> ГОЛОСОВОЙ ПЛАТФОРМЕР</span>
       <div class="header-actions"><button id="help-button" class="icon-button" aria-label="Как играть" title="Как играть">?</button><button id="sound-button" class="icon-button" aria-label="Включить звук" title="Звук выключен"><svg viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path id="sound-waves" d="m16 9 6 6m0-6-6 6"/></svg></button></div>
     </header>
@@ -21,14 +21,22 @@
     <main>
       <div class="game-heading"><div><span class="eyebrow">ПРИКЛЮЧЕНИЕ НАЧИНАЕТСЯ С «КВА»</span><h1>Прыгай своим голосом<span>.</span></h1></div><div class="save-note"><svg viewBox="0 0 20 20"><path d="m4 10 4 4 8-8"/></svg> Прогресс сохраняется</div></div>
       <section id="game-shell" class="game-shell" aria-label="Игра КВА!">
-        <div class="game-toolbar"><div class="level-label"><span id="level-number" class="level-number">01</span><div><span class="tiny-label">ТВОЁ ПРИКЛЮЧЕНИЕ</span><strong id="level-name">Зелёный берег</strong></div></div><div id="level-dots" class="level-dots" aria-label="Уровень 1 из 3"><span class="active"></span><i></i><span></span><i></i><span></span></div><div class="toolbar-actions"><span class="coin-counter"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m12 6 1.7 3.7 4 .5-3 2.8.8 4-3.5-2-3.5 2 .8-4-3-2.8 4-.5Z"/></svg><b id="coin-count">0</b><small id="coin-total">/ 12</small></span><button id="pause-button" class="small-icon" aria-label="Пауза" disabled><svg viewBox="0 0 24 24"><path d="M8 6v12M16 6v12"/></svg></button><button id="fullscreen-button" class="small-icon" aria-label="Полный экран"><svg viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button></div></div>
+        <div class="game-toolbar"><div class="level-label"><span id="level-number" class="level-number">01</span><div><span class="tiny-label">ТВОЁ ПРИКЛЮЧЕНИЕ</span><strong id="level-name">Зелёный берег</strong></div></div><div id="level-dots" class="level-dots" aria-label="Уровень 1 из 3"><span class="active"></span><i></i><span></span><i></i><span></span></div><div class="toolbar-actions"><span class="coin-counter"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m12 6 1.7 3.7 4 .5-3 2.8.8 4-3.5-2-3.5 2 .8-4-3-2.8 4-.5Z"/></svg><b id="coin-count">0</b><small id="coin-total">/ 12</small></span><button id="home-button" class="small-icon" aria-label="Уровни и магазин шляп" title="Уровни и шляпы"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></button><button id="pause-button" class="small-icon" aria-label="Пауза" disabled><svg viewBox="0 0 24 24"><path d="M8 6v12M16 6v12"/></svg></button><button id="fullscreen-button" class="small-icon" aria-label="Полный экран"><svg viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button></div></div>
         <div class="stage" id="stage">
           <canvas id="game" aria-label="Лягушонок прыгает по островам. Используйте голос или кнопки управления."></canvas>
           <div id="stage-caption" class="stage-caption"><span class="location-dot"></span> ТИХОЕ МЕСТЕЧКО ДЛЯ ГРОМКОГО ПРИКЛЮЧЕНИЯ</div>
           <div class="progress-track" aria-label="Прогресс уровня"><div id="level-progress"></div><span>⚑</span></div>
           <div id="toast" class="toast" role="status"></div>
           <div id="overlay" class="overlay">
-            <div id="welcome" class="modal welcome">
+            <div id="home-menu" class="home-menu" aria-label="Главное меню">
+              <div class="home-top"><span class="home-wordmark">ква<span>!</span></span><span class="wallet-pill" aria-label="Монеты в кошельке"><span class="wallet-coin">✦</span><b id="wallet-count">0</b><small id="wallet-unit">монет</small></span></div>
+              <div class="home-hero"><div><div class="modal-kicker">МАЛЕНЬКИЙ ГЕРОЙ. БОЛЬШИЕ ПЛАНЫ.</div><h2 id="home-title">Куда отправимся?</h2><p id="home-subtitle">Новые берега или знакомая тропинка —<br>приключение выбираешь ты.</p><span id="wearing-label" class="wearing-label">Квак в своём лучшем виде</span></div><canvas id="avatar-preview" width="300" height="255" aria-label="Квак в выбранной шляпе"></canvas></div>
+              <div class="menu-tabs" role="tablist" aria-label="Разделы меню"><button id="levels-tab" role="tab" aria-selected="true" aria-controls="levels-panel">Острова <span>03</span></button><button id="shop-tab" role="tab" aria-selected="false" aria-controls="shop-panel">Магазин шляп <span>✧</span></button></div>
+              <section id="levels-panel" role="tabpanel" aria-labelledby="levels-tab"><div id="level-cards" class="level-cards"></div><button id="play-selected" class="primary-button">Отправиться на остров <span class="button-arrow">→</span></button></section>
+              <section id="shop-panel" role="tabpanel" aria-labelledby="shop-tab" hidden><div class="shop-topline"><span>Маленькая деталь. Большой характер.</span><button id="remove-hat" class="text-button">Снять шляпу</button></div><div id="hat-cards" class="hat-cards"></div><p id="shop-feedback" class="shop-feedback" role="status">Купленная шляпа остаётся у тебя навсегда.</p></section>
+              <div class="menu-bottom"><span id="menu-save-note">Монеты в кошелёк — после финиша.<br>Перепроходи острова и собирай на новые шляпы.</span><button id="menu-help" class="text-button">Как играть <span>?</span></button></div>
+            </div>
+            <div id="welcome" class="modal welcome" hidden>
               <div class="modal-kicker"><span></span> НОВЫЙ СПОСОБ ИГРАТЬ</div>
               <h2>Тише едешь.<br><em>Громче прыгаешь!</em></h2>
               <p>Помоги Кваку добраться домой.<br>Твой голос — его суперсила.</p>
@@ -36,6 +44,7 @@
               <button id="voice-start" class="primary-button"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11v1a7 7 0 0 0 14 0v-1M12 19v3m-4 0h8"/></svg><span>Играть голосом</span><span class="button-arrow">↗</span></button>
               <button id="manual-start" class="text-button">Сейчас тихо? Играть кнопками <span>→</span></button>
               <div class="privacy-note">Микрофон обрабатывается только на устройстве.<br>Мы ничего не записываем и не отправляем.</div>
+              <button id="back-levels" class="text-button">← Выбор уровня</button>
             </div>
             <div id="dialog" class="modal" hidden></div>
           </div>
@@ -47,6 +56,6 @@
     </main>
     <footer><span>Сделай вдох. Сделай прыжок.</span><span>КВА! <span class="footer-flower">✳</span> Игра с характером</span></footer>
   </div>
-  <script type="module" src="./src/main.js?v=da68aa2bb8f2"></script>
+  <script type="module" src="./src/main.js?v=c204956e4ef6"></script>
 </body>
 </html>

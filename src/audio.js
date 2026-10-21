@@ -4,27 +4,32 @@ export class VoiceInput {
   async start() {
     if (!window.isSecureContext) throw new Error('Для микрофона открой игру по HTTPS или на localhost. Пока можно играть кнопками.');
     if (!navigator.mediaDevices?.getUserMedia) throw new Error('Этот браузер не поддерживает микрофон. Попробуй Chrome, Safari или управление кнопками.');
+    if (this.active) this.stop();
     const generation = ++this.generation;
-    let stream;
+    let stream, context, source;
+    const release = () => { stream?.getTracks().forEach(t => t.stop()); source?.disconnect(); context?.close().catch(() => {}); };
     try {
       stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: false }, video: false });
-      if (generation !== this.generation) { stream.getTracks().forEach(t => t.stop()); return false; }
-      this.stream = stream;
-      this.context = new (window.AudioContext || window.webkitAudioContext)();
-      if (this.context.state === 'suspended') await this.context.resume();
-      this.source = this.context.createMediaStreamSource(stream);
-      this.analyser = this.context.createAnalyser();
-      this.analyser.fftSize = 1024;
-      this.source.connect(this.analyser);
+      if (generation !== this.generation) { release(); return false; }
+      context = new (window.AudioContext || window.webkitAudioContext)();
+      if (context.state === 'suspended') await context.resume();
+      if (generation !== this.generation) { release(); return false; }
+      source = context.createMediaStreamSource(stream);
+      const analyser = context.createAnalyser();
+      analyser.fftSize = 1024;
+      source.connect(analyser);
+      this.stream = stream; this.context = context; this.source = source; this.analyser = analyser;
       // Intentionally never connected to speakers; no recording or upload exists.
       this.samples = new Float32Array(this.analyser.fftSize);
       this.active = true; this.level = 0;
       this.calibration = { remaining: 0.85, sum: 0, count: 0 };
       return true;
     } catch (e) {
-      if (stream) stream.getTracks().forEach(t => t.stop());
+      release();
+      // An old denied/cancelled permission request must not stop a newer stream.
+      if (generation !== this.generation) return false;
       const errors = { NotAllowedError: 'Доступ к микрофону не разрешён. Разреши его в браузере или играй кнопками.', NotFoundError: 'Микрофон не найден. Подключи его или играй кнопками.', NotReadableError: 'Микрофон занят другим приложением. Освободи его или играй кнопками.', SecurityError: 'Микрофон заблокирован площадкой. Доступны кнопки управления.' };
-      this.stop();
+      this.active = false; this.level = 0;
       throw new Error(errors[e.name] || e.message || 'Не удалось включить микрофон. Доступно управление кнопками.');
     }
   }

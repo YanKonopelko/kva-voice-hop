@@ -1,4 +1,4 @@
-import { LEVELS, platformAt } from './levels.js?v=da68aa2bb8f2';
+import { LEVELS, platformAt } from './levels.js?v=c204956e4ef6';
 
 export const PHYSICS = Object.freeze({ speed: 220, acceleration: 1800, friction: 2350, gravity: 1500, jump: 660, radius: 19, height: 47, coyoteTime: 0.09, jumpBuffer: 0.12 });
 const approach = (value, target, delta) => value < target ? Math.min(target, value + delta) : Math.max(target, value - delta);
