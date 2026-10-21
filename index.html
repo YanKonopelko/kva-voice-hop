@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f5ec">
+  <meta name="description" content="КВА! — маленькое приключение с большим голосом. Говори, чтобы идти. Квакай, чтобы прыгать.">
+  <title>КВА! — Прыгай голосом</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="site-header">
+      <a href="./" class="brand" aria-label="КВА! На главную"><img src="./assets/favicon.svg" width="44" height="44" alt=""><span>ква<span class="brand-mark">!</span></span><i>маленькая игра.<br>большой голос.</i></a>
+      <span class="header-tag"><span class="status-dot"></span> ГОЛОСОВОЙ ПЛАТФОРМЕР</span>
+      <div class="header-actions"><button id="help-button" class="icon-button" aria-label="Как играть" title="Как играть">?</button><button id="sound-button" class="icon-button" aria-label="Включить звук" title="Звук выключен"><svg viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path id="sound-waves" d="m16 9 6 6m0-6-6 6"/></svg></button></div>
+    </header>
+
+    <main>
+      <div class="game-heading"><div><span class="eyebrow">ПРИКЛЮЧЕНИЕ НАЧИНАЕТСЯ С «КВА»</span><h1>Прыгай своим голосом<span>.</span></h1></div><div class="save-note"><svg viewBox="0 0 20 20"><path d="m4 10 4 4 8-8"/></svg> Прогресс сохраняется</div></div>
+      <section id="game-shell" class="game-shell" aria-label="Игра КВА!">
+        <div class="game-toolbar"><div class="level-label"><span id="level-number" class="level-number">01</span><div><span class="tiny-label">ТВОЁ ПРИКЛЮЧЕНИЕ</span><strong id="level-name">Зелёный берег</strong></div></div><div id="level-dots" class="level-dots" aria-label="Уровень 1 из 3"><span class="active"></span><i></i><span></span><i></i><span></span></div><div class="toolbar-actions"><span class="coin-counter"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m12 6 1.7 3.7 4 .5-3 2.8.8 4-3.5-2-3.5 2 .8-4-3-2.8 4-.5Z"/></svg><b id="coin-count">0</b><small id="coin-total">/ 12</small></span><button id="pause-button" class="small-icon" aria-label="Пауза" disabled><svg viewBox="0 0 24 24"><path d="M8 6v12M16 6v12"/></svg></button><button id="fullscreen-button" class="small-icon" aria-label="Полный экран"><svg viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button></div></div>
+        <div class="stage" id="stage">
+          <canvas id="game" aria-label="Лягушонок прыгает по островам. Используйте голос или кнопки управления."></canvas>
+          <div id="stage-caption" class="stage-caption"><span class="location-dot"></span> ТИХОЕ МЕСТЕЧКО ДЛЯ ГРОМКОГО ПРИКЛЮЧЕНИЯ</div>
+          <div class="progress-track" aria-label="Прогресс уровня"><div id="level-progress"></div><span>⚑</span></div>
+          <div id="toast" class="toast" role="status"></div>
+          <div id="overlay" class="overlay">
+            <div id="welcome" class="modal welcome">
+              <div class="modal-kicker"><span></span> НОВЫЙ СПОСОБ ИГРАТЬ</div>
+              <h2>Тише едешь.<br><em>Громче прыгаешь!</em></h2>
+              <p>Помоги Кваку добраться домой.<br>Твой голос — его суперсила.</p>
+              <div class="voice-steps"><div><span class="step-symbol silent">· · ·</span><b>Молчи</b><small>стой на месте</small></div><div><span class="step-symbol speak">ı l ı</span><b>Говори</b><small>иди вперёд</small></div><div><span class="step-symbol shout">ı l I l ı</span><b>Квакай!</b><small>прыгай выше</small></div></div>
+              <button id="voice-start" class="primary-button"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11v1a7 7 0 0 0 14 0v-1M12 19v3m-4 0h8"/></svg><span>Играть голосом</span><span class="button-arrow">↗</span></button>
+              <button id="manual-start" class="text-button">Сейчас тихо? Играть кнопками <span>→</span></button>
+              <div class="privacy-note">Микрофон обрабатывается только на устройстве.<br>Мы ничего не записываем и не отправляем.</div>
+            </div>
+            <div id="dialog" class="modal" hidden></div>
+          </div>
+          <div id="touch-controls" class="touch-controls" hidden><button id="walk-button" aria-label="Идти вперёд">→ <span>Идти</span></button><button id="jump-button" aria-label="Прыгнуть">↑ <span>Прыгнуть</span></button></div>
+        </div>
+        <div class="voice-panel"><div class="input-status"><span id="input-icon" class="input-icon"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11v1a7 7 0 0 0 14 0v-1M12 19v3m-4 0h8"/></svg></span><div><strong id="input-label">Сила твоего голоса</strong><span id="input-hint">Подключи микрофон и скажи «ква»</span></div></div><div class="meter-wrapper"><div id="voice-meter" class="voice-meter" role="meter" aria-label="Уровень голоса" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="meter-fill"></div><i class="walk-threshold"></i><i class="jump-threshold"></i></div><div class="meter-labels"><span>Тишина</span><span>Шаг</span><span>Прыжок!</span></div></div><label class="sensitivity" for="sensitivity"><span>Чувствительность <b id="sensitivity-value">50%</b></span><input id="sensitivity" type="range" min="0" max="100" value="50"></label></div>
+      </section>
+      <section class="below-game" aria-label="Советы"><div class="little-note"><span class="note-icon">♪</span><p><b>Не обязательно кричать.</b><br>Напевай, разговаривай или просто квакай.</p></div><div class="keyboard-note"><kbd>→</kbd> идти <kbd>Пробел</kbd> прыгать <span class="note-divider"></span><kbd>Esc</kbd> пауза</div><button id="change-mode" class="mode-button">Сменить управление <span>↗</span></button></section>
+    </main>
+    <footer><span>Сделай вдох. Сделай прыжок.</span><span>КВА! <span class="footer-flower">✳</span> Игра с характером</span></footer>
+  </div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
