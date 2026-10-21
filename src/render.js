@@ -1,4 +1,4 @@
-import { PHYSICS } from './sim.js';
+import { PHYSICS } from './sim.js?v=da68aa2bb8f2';
 
 const TAU = Math.PI * 2;
 function seeded(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
@@ -17,10 +17,22 @@ export class Renderer {
   resize() {
     const rect=this.canvas.getBoundingClientRect();
     if (!rect.width || !rect.height) return;
+    // ResizeObserver runs after layout, potentially after this frame's draw.
+    // Never clear the presented bitmap here: keep it until the next full render.
+    this.pendingViewport={width:rect.width,height:rect.height};
+  }
+  applyResize() {
+    if (!this.pendingViewport) return;
+    const rect=this.pendingViewport;
+    this.pendingViewport=null;
     const aspect=rect.width/rect.height;
     this.width=Math.max(580,aspect*540); this.height=this.width/aspect;
     this.dpr=Math.min(window.devicePixelRatio||1,2);
-    this.canvas.width=Math.round(rect.width*this.dpr); this.canvas.height=Math.round(rect.height*this.dpr);
+    const pixelWidth=Math.max(1,Math.round(rect.width*this.dpr));
+    const pixelHeight=Math.max(1,Math.round(rect.height*this.dpr));
+    // Assigning even the same width/height clears a canvas and resets its context.
+    if(this.canvas.width!==pixelWidth)this.canvas.width=pixelWidth;
+    if(this.canvas.height!==pixelHeight)this.canvas.height=pixelHeight;
     this.scale=this.canvas.width/this.width;
   }
   platformTexture(level,platform,index) {
@@ -157,6 +169,8 @@ export class Renderer {
     this.joints={hip:[x,y+hipY],leftFoot:[x+backFoot.x,y+backFoot.y],rightFoot:[x+frontFoot.x,y+frontFoot.y]};
   }
   render(sim,{time=sim.time,voice=0,menu=false}={}) {
+    // A bitmap resize and the complete redraw occur together in this JS task.
+    this.applyResize();
     const c=this.ctx,W=this.width,H=this.height,off=H-540,p=sim.player;
     c.setTransform(this.scale,0,0,this.scale,0,0);
     const target=Math.max(0,Math.min(sim.level.finish-W*.48,p.x-W*.25));

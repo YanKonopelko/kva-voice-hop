@@ -1,9 +1,9 @@
-import { LEVELS } from './levels.js';
-import { GameSim } from './sim.js';
-import { Renderer } from './render.js';
-import { VoiceInput, SoundEffects } from './audio.js';
-import { readSave, writeSave } from './storage.js';
-import { platform } from './platform.js';
+import { LEVELS } from './levels.js?v=da68aa2bb8f2';
+import { GameSim } from './sim.js?v=da68aa2bb8f2';
+import { Renderer } from './render.js?v=da68aa2bb8f2';
+import { VoiceInput, SoundEffects } from './audio.js?v=da68aa2bb8f2';
+import { readSave, writeSave } from './storage.js?v=da68aa2bb8f2';
+import { platform } from './platform.js?v=da68aa2bb8f2';
 
 const $ = id => document.getElementById(id);
 if (new URLSearchParams(location.search).get('embed') === '1') document.body.classList.add('embedded');
