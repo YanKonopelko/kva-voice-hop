@@ -1,5 +1,5 @@
-import { LEVELS } from './levels.js?v=c204956e4ef6';
-import { HATS } from './cosmetics.js?v=c204956e4ef6';
+import { LEVELS } from './levels.js?v=9287663670c9';
+import { HATS } from './cosmetics.js?v=9287663670c9';
 
 export function buyOrEquipHat(save, id) {
   const hat = HATS.find(h => h.id === id);

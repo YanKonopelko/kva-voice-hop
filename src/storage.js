@@ -1,5 +1,5 @@
-import { LEVELS } from './levels.js?v=c204956e4ef6';
-import { HATS } from './cosmetics.js?v=c204956e4ef6';
+import { LEVELS } from './levels.js?v=9287663670c9';
+import { HATS } from './cosmetics.js?v=9287663670c9';
 const KEY = 'kva-save-v1';
 export const freshSave = () => ({ schema: 2, unlocked: 0, level: 0, sensitivity: 50, sound: false, best: {}, wallet: 0, ownedHats: ['none'], equippedHat: 'none', rewardedRuns: [] });
 export function readSave(storage) {

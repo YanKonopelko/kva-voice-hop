@@ -1,11 +1,11 @@
-import { LEVELS } from './levels.js?v=c204956e4ef6';
-import { GameSim } from './sim.js?v=c204956e4ef6';
-import { Renderer, renderAvatar } from './render.js?v=c204956e4ef6';
-import { VoiceInput, SoundEffects } from './audio.js?v=c204956e4ef6';
-import { readSave, writeSave } from './storage.js?v=c204956e4ef6';
-import { platform } from './platform.js?v=c204956e4ef6';
-import { HATS, hatSvg } from './cosmetics.js?v=c204956e4ef6';
-import { buyOrEquipHat, completeRun } from './progression.js?v=c204956e4ef6';
+import { LEVELS } from './levels.js?v=9287663670c9';
+import { GameSim } from './sim.js?v=9287663670c9';
+import { Renderer, renderAvatar } from './render.js?v=9287663670c9';
+import { VoiceInput, SoundEffects } from './audio.js?v=9287663670c9';
+import { readSave, writeSave } from './storage.js?v=9287663670c9';
+import { platform } from './platform.js?v=9287663670c9';
+import { HATS, hatSvg } from './cosmetics.js?v=9287663670c9';
+import { buyOrEquipHat, completeRun } from './progression.js?v=9287663670c9';
 
 const $ = id => document.getElementById(id);
 const coinWord = n => n % 100 >= 11 && n % 100 <= 14 ? 'монет' : n % 10 === 1 ? 'монета' : n % 10 >= 2 && n % 10 <= 4 ? 'монеты' : 'монет';
